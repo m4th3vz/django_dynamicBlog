@@ -1,3 +1,4 @@
+# views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Text
 from .forms import TextForm
@@ -8,13 +9,13 @@ def index(request):
 
 # Lista de textos
 def listText(request):
-    textos = Text.objects.all()
+    textos = Text.objects.all().order_by('-created_at')  # Ordena do mais recente para o mais antigo
     return render(request, 'listText.html', {'textos': textos})
 
 # Publicar texto
 def postText(request):
     if request.method == 'POST':
-        form = TextForm(request.POST, request.FILES)
+        form = TextForm(request.POST, request.FILES)  # Certifique-se de incluir request.FILES aqui
         if form.is_valid():
             form.save()
             return redirect('listText')

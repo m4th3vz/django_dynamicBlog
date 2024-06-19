@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',  # Adicione seu aplicativo aqui
+    'core',  # Adicione seu aplicativo aqui (modificado)
 ]
 
 
@@ -130,7 +130,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-# Configuração de arquivos de mídia
+# Configuração de arquivos de mídia (modificado)
 
 MEDIA_URL = '/media/'
 
