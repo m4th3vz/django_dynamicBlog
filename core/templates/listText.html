@@ -20,21 +20,32 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h1 class="my-4">Lista de Textos</h1>
+    <div class="container mt-5">
         <div class="row">
             {% for texto in textos %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if texto.imagem %}
+                    <a href="{% url 'detailText' texto.id %}">
+                        <img class="card-img-top" src="{{ texto.imagem.url }}" alt="Imagem do Texto">
+                    </a>
+                    {% else %}
+                    <a href="{% url 'detailText' texto.id %}">
+                        <img class="card-img-top" src="{% static 'placeholder.jpg' %}" alt="Placeholder">
+                    </a>
+                    {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ texto.titulo }}</h5>
-                        <p class="card-text">{{ texto.conteudo }}</p>
-                        <a href="{% url 'detailText' texto.id %}" class="btn btn-primary">Ver Detalhes</a>
+                        <h4 class="card-title">{{ texto.titulo }}</h4>
+                        <p class="card-text">{{ texto.conteudo|truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'detailText' texto.id %}" class="btn btn-success m-1 btn-custom">Leia Mais</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div>    
+    
 </body>
 </html>
