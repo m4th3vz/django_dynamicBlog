@@ -15,7 +15,7 @@ def listText(request):
 # Publicar texto
 def postText(request):
     if request.method == 'POST':
-        form = TextForm(request.POST, request.FILES)  # Certifique-se de incluir request.FILES aqui
+        form = TextForm(request.POST, request.FILES)  # request.FILES para mostrar a imagem no card
         if form.is_valid():
             form.save()
             return redirect('listText')
@@ -23,7 +23,13 @@ def postText(request):
         form = TextForm()
     return render(request, 'postText.html', {'form': form})
 
-# Página do texto
+# Página para ler o texto
 def detailText(request, texto_id):
     texto = get_object_or_404(Text, pk=texto_id)
     return render(request, 'detailText.html', {'texto': texto})
+
+# Excluir texto
+def deleteText(request, texto_id):
+    texto = get_object_or_404(Text, pk=texto_id)
+    texto.delete()
+    return redirect('listText')
