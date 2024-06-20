@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     # Página principal
     path('', views.index, name='index'),
-    # Página de lista dos textos
+    # Página da lista dos textos
     path('listText/', views.listText, name='listText'),
     # Página para publicar texto
     path('postText/', views.postText, name='postText'),

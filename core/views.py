@@ -2,14 +2,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Text
 from .forms import TextForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Página principal
 def index(request):
     return render(request, 'index.html')
 
-# Lista de textos
+# Lista de textos com paginação
 def listText(request):
-    textos = Text.objects.all().order_by('-created_at')  # Ordena do mais recente para o mais antigo
+    textos_list = Text.objects.all().order_by('-created_at')
+    paginator = Paginator(textos_list, 3)  # 3 textos por página
+
+    page = request.GET.get('page')
+    try:
+        textos = paginator.page(page)
+    except PageNotAnInteger:
+        # Se a página não for um número inteiro, exibir a primeira página
+        textos = paginator.page(1)
+    except EmptyPage:
+        # Se a página está fora dos limites (por exemplo, página 9999), exibir a última página de resultados
+        textos = paginator.page(paginator.num_pages)
+
     return render(request, 'listText.html', {'textos': textos})
 
 # Publicar texto

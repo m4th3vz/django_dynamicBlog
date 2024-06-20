@@ -20,74 +20,124 @@
         </div>
     </nav>
 
-    <div class="d-flex justify-content-center">
-        <a href="{% url 'postText' %}">
-            <button type="button" class="btn btn-success m-1 btn-custom">Criar Texto</button>
-        </a>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 text-center mb-3">
+                <a href="{% url 'postText' %}">
+                    <button type="button" class="btn btn-success btn-custom">Criar Texto</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Cards -->
+        <div class="row">
+            {% for texto in textos %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if texto.imagem %}
+                    <a href="{% url 'detailText' texto.id %}">
+                        <img class="card-img-top" src="{{ texto.imagem.url }}" alt="Imagem do Texto">
+                    </a>
+                    {% else %}
+                    <a href="{% url 'detailText' texto.id %}">
+                        <img class="card-img-top" src="{% static 'placeholder.jpg' %}" alt="Placeholder">
+                    </a>
+                    {% endif %}
+                    <div class="card-body">
+                        <h4 class="card-title">{{ texto.titulo }}</h4>
+                        <p class="card-text">{{ texto.conteudo|truncatechars:100 }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'detailText' texto.id %}" class="btn btn-success m-1 btn-custom">Leia Mais</a>
+                        <a href="{% url 'editText' texto.id %}" class="btn btn-success m-1 btn-custom">Editar</a>
+                        <button class="btn btn-success m-1 btn-custom" onclick="confirmDelete({{ texto.id }})">Excluir</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir este post?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmDeleteButton" href="#" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estilos para os botões de Paginação -->
+    <style>
+        .pagination .page-link {
+            color: #fff; /* Cor do texto */
+            background-color: #092E20; /* Cor de fundo dos botões */
+            border-color: #092E20; /* Cor da borda dos botões */
+        }
     
-    <!-- Posts publicados -->
-<div class="container mt-5">
-    <div class="row">
-        {% for texto in textos %}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-                {% if texto.imagem %}
-                <a href="{% url 'detailText' texto.id %}">
-                    <img class="card-img-top" src="{{ texto.imagem.url }}" alt="Imagem do Texto">
-                </a>
-                {% else %}
-                <a href="{% url 'detailText' texto.id %}">
-                    <img class="card-img-top" src="{% static 'placeholder.jpg' %}" alt="Placeholder">
-                </a>
-                {% endif %}
-                <div class="card-body">
-                    <h4 class="card-title">{{ texto.titulo }}</h4>
-                    <p class="card-text">{{ texto.conteudo|truncatechars:100 }}</p>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'detailText' texto.id %}" class="btn btn-success m-1 btn-custom">Leia Mais</a>
-                    <a href="{% url 'editText' texto.id %}" class="btn btn-success m-1 btn-custom">Editar</a>
-                    <button class="btn btn-success m-1 btn-custom" onclick="confirmDelete({{ texto.id }})">Excluir</button>
-                </div>
-            </div>
-        </div>
+        .pagination .page-item.active .page-link {
+            background-color: #074b35; /* Cor de fundo do botão ativo */
+            border-color: #074b35; /* Cor da borda do botão ativo */
+        }
+    
+        .pagination .page-link:hover {
+            background-color: #074b35; /* Cor de fundo dos botões quando hover */
+            border-color: #074b35; /* Cor da borda dos botões quando hover */
+        }
+    </style>
+    
+<!-- Paginação -->
+<div class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+        {% if textos.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">Primeira</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ textos.previous_page_number }}">Anterior</a>
+        </li>
+        {% endif %}
+        
+        {% for num in textos.paginator.page_range %}
+        <li class="page-item {% if textos.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
         {% endfor %}
-    </div>
+
+        {% if textos.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ textos.next_page_number }}">Próxima</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ textos.paginator.num_pages }}">Última</a>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 
-<!-- Modal de Confirmação -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Tem certeza que deseja excluir este post?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a id="confirmDeleteButton" href="#" class="btn btn-danger">Excluir</a>
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- Script para o Modal -->
+    <script>
+    function confirmDelete(textoId) {
+        var deleteUrl = "{% url 'deleteText' 0 %}".slice(0, -2) + textoId + "/";
+        document.getElementById('confirmDeleteButton').setAttribute('href', deleteUrl);
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+    </script>
 
-<!-- Script para o Modal -->
-<script>
-function confirmDelete(textoId) {
-    var deleteUrl = "{% url 'deleteText' 0 %}".slice(0, -2) + textoId + "/";
-    document.getElementById('confirmDeleteButton').setAttribute('href', deleteUrl);
-    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-}
-</script>
-
-<!-- Inclua os arquivos JavaScript do Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <!-- Inclua os arquivos JavaScript do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     
 </body>
 </html>
