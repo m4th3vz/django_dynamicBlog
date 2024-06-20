@@ -33,3 +33,15 @@ def deleteText(request, texto_id):
     texto = get_object_or_404(Text, pk=texto_id)
     texto.delete()
     return redirect('listText')
+
+# Editar texto
+def editText(request, texto_id):
+    texto = get_object_or_404(Text, pk=texto_id)
+    if request.method == 'POST':
+        form = TextForm(request.POST, request.FILES, instance=texto)
+        if form.is_valid():
+            form.save()
+            return redirect('listText')
+    else:
+        form = TextForm(instance=texto)
+    return render(request, 'editText.html', {'form': form, 'texto': texto})

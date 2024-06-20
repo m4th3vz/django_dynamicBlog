@@ -20,6 +20,12 @@
         </div>
     </nav>
 
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'postText' %}">
+            <button type="button" class="btn btn-success m-1 btn-custom">Criar Texto</button>
+        </a>
+    </div>
+    
     <!-- Posts publicados -->
 <div class="container mt-5">
     <div class="row">
@@ -41,6 +47,7 @@
                 </div>
                 <div class="card-footer">
                     <a href="{% url 'detailText' texto.id %}" class="btn btn-success m-1 btn-custom">Leia Mais</a>
+                    <a href="{% url 'editText' texto.id %}" class="btn btn-success m-1 btn-custom">Editar</a>
                     <button class="btn btn-success m-1 btn-custom" onclick="confirmDelete({{ texto.id }})">Excluir</button>
                 </div>
             </div>
