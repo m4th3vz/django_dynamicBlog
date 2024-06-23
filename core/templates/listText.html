@@ -56,7 +56,6 @@
             </div>
             {% endfor %}
         </div>
-    </div>
 
     <!-- Modal de Confirmação -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -128,7 +127,7 @@
     <!-- Script para o Modal -->
     <script>
     function confirmDelete(textoId) {
-        var deleteUrl = "{% url 'deleteText' 0 %}".slice(0, -2) + textoId + "/";
+        var deleteUrl = "".slice(0, -2) + textoId + "/";
         document.getElementById('confirmDeleteButton').setAttribute('href', deleteUrl);
         var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
         deleteModal.show();
